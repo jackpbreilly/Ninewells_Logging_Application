@@ -6,4 +6,55 @@
     android:layout_height="match_parent"
     tools:context="team.horizon.ninewellsloggingsystem.MainActivity">
 
+    <Spinner
+        android:id="@+id/formSelectionSpinner"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="1dp" />
+
+    <EditText
+        android:id="@+id/jobNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Job Number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/formSelectionSpinner"
+        app:layout_constraintVertical_bias="0.169" />
+
+    <EditText
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/signatureButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/jobNo" />
+
+    <Button
+        android:id="@+id/signatureButton"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:onClick="launchSignaturePad"
+        android:text="Sign"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.226"
+        app:layout_constraintStart_toEndOf="@+id/viewFormButton"
+        tools:layout_editor_absoluteY="237dp" />
+
+    <Button
+        android:id="@+id/viewFormButton"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="VIEW FORM"
+        app:layout_constraintTop_toBottomOf="@+id/userName"
+        tools:layout_editor_absoluteX="81dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

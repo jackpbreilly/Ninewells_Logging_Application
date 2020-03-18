@@ -33,28 +33,30 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/signatureButton"
+        app:layout_constraintBottom_toTopOf="@+id/sign"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/jobNo" />
+        app:layout_constraintTop_toBottomOf="@+id/jobNo"
+        app:layout_constraintVertical_bias="0.093" />
 
     <Button
-        android:id="@+id/signatureButton"
+        android:id="@+id/sign"
         android:layout_width="88dp"
         android:layout_height="wrap_content"
-        android:onClick="launchSignaturePad"
         android:text="Sign"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.226"
-        app:layout_constraintStart_toEndOf="@+id/viewFormButton"
-        tools:layout_editor_absoluteY="237dp" />
+        app:layout_constraintHorizontal_bias="0.23"
+        app:layout_constraintStart_toEndOf="@+id/submit"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/viewFormButton"
+        android:id="@+id/submit"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:text="VIEW FORM"
-        app:layout_constraintTop_toBottomOf="@+id/userName"
-        tools:layout_editor_absoluteX="81dp" />
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

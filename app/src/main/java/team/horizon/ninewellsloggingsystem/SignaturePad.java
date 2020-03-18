@@ -49,7 +49,7 @@ public class SignaturePad extends AppCompatActivity {
             }
 
             Bitmap signature_bitmap = signature_pad.getSignatureBitmap();
-            File output_path = new File(Environment.getExternalStorageDirectory(), "last_sig.png"); //TODO Fix the filename
+            File output_path = new File("/sdcard/Download", "last_sig.bmp"); //TODO Fix the filename
             try (FileOutputStream out = new FileOutputStream(output_path)) { //this is essentially "with" from Python
                 signature_bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"

@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createPdf(){
-        Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/Sign.bmp");
+        Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/last_sig.bmp");
         PdfDocument document = new PdfDocument();
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(300, 600, 1).create();
 

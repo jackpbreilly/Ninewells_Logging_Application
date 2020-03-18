@@ -16,8 +16,10 @@ import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.File;
@@ -30,6 +32,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Button submitBtn, signBtn;
+    Spinner formSpinner;
     EditText editText;
 
     String[] permissions = new String[]{
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
         initializeUI();
+        populateSpinner();
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeUI() {
         submitBtn = findViewById(R.id.submit);
         signBtn = findViewById(R.id.sign);
+        formSpinner = findViewById(R.id.form);
     }
 
     private boolean checkPermissions() {
@@ -121,8 +126,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void launchSignaturePad(){
+    private void launchSignaturePad(){
         Intent intent = new Intent(MainActivity.this, SignaturePad.class);
         startActivity(intent);
     }
+
+    private void populateSpinner(){
+        ArrayList<String> spinnerData = new ArrayList<>();
+        String path = "/sdcard/Download/forms";
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        for (int i = 0; i < files.length; i++)
+        {
+            spinnerData.add(files[i].getName().toString());
+        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, spinnerData);
+        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        formSpinner.setAdapter(arrayAdapter);
+    }
+
 }

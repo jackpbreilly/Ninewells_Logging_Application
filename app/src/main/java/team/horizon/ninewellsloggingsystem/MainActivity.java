@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.pdf.PdfDocument;
+import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,12 +23,29 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.itextpdf.text.Annotation;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import org.w3c.dom.Text;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createPdf();
+                CopyForm("/sdcard/Download/forms/ExampleForm.pdf", "/sdcard/Download/2.pdf", 1);
+                try {
+                    addInputToForm("/sdcard/Download/2.pdf");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -64,9 +89,58 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void createPdf(){
+    // REFACTOR, *********************************************************** WORKS FOR NOW BUT UGLY ASF
+    private void CopyForm(String originalFilePath, String outputFile, int location) {
+
+        PdfReader originalFileReader = null;
+        try {
+            originalFileReader = new PdfReader(originalFilePath);
+        } catch (IOException ex) {
+            System.out.println("ITextHelper.addPDFToPDF(): can't read original file: " + ex);
+        }
+        if (originalFileReader != null) {
+
+            // -- Copy
+            int numberOfOriginalPages = originalFileReader.getNumberOfPages();
+            Document document = new Document();
+            PdfCopy copy = null;
+            try {
+                copy = new PdfCopy(document, new FileOutputStream(outputFile));
+                document.open();
+
+                for (int i = 1; i <= numberOfOriginalPages; i++) {
+                    copy.addPage(copy.getImportedPage(originalFileReader, i));
+
+                }
+                document.close();
+            } catch (DocumentException | FileNotFoundException ex) {
+                System.out.println("ITextHelper.addPDFToPDF(): can't read output location: " + ex);
+            } catch (IOException ex) {
+                //Logger.getLogger(ITextHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private void addInputToForm(String copyFormPath) throws IOException, DocumentException {
+        PdfReader readerOriginalDoc = new PdfReader(copyFormPath);
+        PdfStamper stamper = new PdfStamper(readerOriginalDoc,new FileOutputStream("/sdcard/Download/newStamper.pdf"));
+        PdfContentByte content = stamper.getOverContent(1);
+        Image image = Image.getInstance("/sdcard/Download/last_sig.bmp");
+        image.scaleToFit(200,200);
+        image.scaleAbsolute(50, 20);
+        image.setAbsolutePosition(100, 100);
+        image.setAnnotation(new Annotation(0, 0, 0, 0, 3));
+        content.addImage(image);
+        stamper.close();
+    }
+
+
+    private void createPdf2(){
         Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/last_sig.bmp");
+
+
         PdfDocument document = new PdfDocument();
+
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(300, 600, 1).create();
 
         PdfDocument.Page page = document.startPage(pageInfo);
@@ -120,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 100) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // do something
             }
             return;
         }
@@ -136,13 +209,15 @@ public class MainActivity extends AppCompatActivity {
         String path = "/sdcard/Download/forms";
         File directory = new File(path);
         File[] files = directory.listFiles();
-        for (int i = 0; i < files.length; i++)
-        {
-            spinnerData.add(files[i].getName().toString());
+        if(files != null) {
+
+            for (int i = 0; i < files.length; i++) {
+                spinnerData.add(files[i].getName().toString());
+            }
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, spinnerData);
+            arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            formSpinner.setAdapter(arrayAdapter);
         }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, spinnerData);
-        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        formSpinner.setAdapter(arrayAdapter);
     }
 
 }

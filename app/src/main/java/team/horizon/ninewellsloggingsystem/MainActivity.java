@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.pdf.PdfDocument;
 import android.graphics.pdf.PdfRenderer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -70,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CopyForm("/sdcard/Download/forms/ExampleForm.pdf", "/sdcard/Download/2.pdf", 1);
                 try {
-                    addInputToForm("/sdcard/Download/2.pdf");
+                    addInputToForm("/sdcard/Download/forms/ExampleForm.pdf");
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {
                     e.printStackTrace();
                 }
+
             }
         });
 
@@ -89,46 +90,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // REFACTOR, *********************************************************** WORKS FOR NOW BUT UGLY ASF
-    private void CopyForm(String originalFilePath, String outputFile, int location) {
-
-        PdfReader originalFileReader = null;
-        try {
-            originalFileReader = new PdfReader(originalFilePath);
-        } catch (IOException ex) {
-            System.out.println("ITextHelper.addPDFToPDF(): can't read original file: " + ex);
-        }
-        if (originalFileReader != null) {
-
-            // -- Copy
-            int numberOfOriginalPages = originalFileReader.getNumberOfPages();
-            Document document = new Document();
-            PdfCopy copy = null;
-            try {
-                copy = new PdfCopy(document, new FileOutputStream(outputFile));
-                document.open();
-
-                for (int i = 1; i <= numberOfOriginalPages; i++) {
-                    copy.addPage(copy.getImportedPage(originalFileReader, i));
-
-                }
-                document.close();
-            } catch (DocumentException | FileNotFoundException ex) {
-                System.out.println("ITextHelper.addPDFToPDF(): can't read output location: " + ex);
-            } catch (IOException ex) {
-                //Logger.getLogger(ITextHelper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
 
     private void addInputToForm(String copyFormPath) throws IOException, DocumentException {
         PdfReader readerOriginalDoc = new PdfReader(copyFormPath);
         PdfStamper stamper = new PdfStamper(readerOriginalDoc,new FileOutputStream("/sdcard/Download/newStamper.pdf"));
         PdfContentByte content = stamper.getOverContent(1);
         Image image = Image.getInstance("/sdcard/Download/last_sig.bmp");
-        image.scaleToFit(200,200);
-        image.scaleAbsolute(50, 20);
-        image.setAbsolutePosition(100, 100);
+        image.scaleAbsolute(500, 200);
+        image.setAbsolutePosition(20, 30);
         image.setAnnotation(new Annotation(0, 0, 0, 0, 3));
         content.addImage(image);
         stamper.close();

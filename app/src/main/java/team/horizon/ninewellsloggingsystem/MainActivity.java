@@ -1,5 +1,6 @@
 package team.horizon.ninewellsloggingsystem;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -27,6 +28,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.itextpdf.text.Annotation;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
@@ -67,13 +73,15 @@ public class MainActivity extends AppCompatActivity {
     String[] permissions = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET
     };
+
+    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         checkPermissions();
         initializeUI();
         //populateSpinner();
@@ -120,9 +128,42 @@ public class MainActivity extends AppCompatActivity {
         signature.setImage(Image.getInstance("/sdcard/Download/last_sig.bmp"));
         form.replacePushbuttonField("Signature", signature.getField());
         stamper.close();
+        upload();
+
     }
 
+    private void upload(){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://ninewells-logging-system.appspot.com/");
 
+        Uri file = Uri.fromFile(new File("sdcard/Download/newStamper.pdf"));
+        Log.d("file", file.getPath());
+
+
+        StorageReference riversRef = storageRef.child(String.valueOf(System.currentTimeMillis())+".pdf");
+
+        UploadTask uploadTask = riversRef.putFile(file);
+
+// Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.d("uploadFail", "" + exception);
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                //sendNotification("upload backup", 1);
+
+                //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+               // Log.d("downloadUrl", "" + downloadUrl);
+            }
+        });
+    }
 
     private void initializeUI() {
         submitBtn = findViewById(R.id.submit);

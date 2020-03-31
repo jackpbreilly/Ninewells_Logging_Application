@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "396794866370",
+    "firebase_url": "https://ninewells-logging-system.firebaseio.com",
+    "project_id": "ninewells-logging-system",
+    "storage_bucket": "ninewells-logging-system.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396794866370:android:62b6a662454c66fccf695b",
+        "android_client_info": {
+          "package_name": "team.horizon.ninewellloggingsystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "396794866370-ife147f9qhgedf3gmt11mffq0hbnt6a5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiIigW4LowL6dRY0g7lAEoOpWc-Wd6I08"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "396794866370-ife147f9qhgedf3gmt11mffq0hbnt6a5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

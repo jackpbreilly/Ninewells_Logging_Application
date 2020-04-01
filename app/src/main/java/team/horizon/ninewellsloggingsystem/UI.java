@@ -3,11 +3,17 @@ package team.horizon.ninewellsloggingsystem;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.itextpdf.text.pdf.AcroFields;
+
 import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.HashMap;
+import java.util.Map;
 
 class UI {
 
@@ -24,9 +30,27 @@ class UI {
         arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinnerEl.setAdapter(arrayAdapter);
     }
-    public void launchNewIntent(Class class_){
+    public void LaunchNewIntent(Class class_){
         Intent intent = new Intent(Context_, class_);
         Context_.startActivity(intent);
     }
 
+
+    // Look for doublers ()
+    public HashMap<String, EditText> GenerateEditText(Map<String, AcroFields.Item> data, LinearLayout layout){
+        HashMap<String, EditText> fieldData = new HashMap<String, EditText>();
+        for (String field:data.keySet()) {
+            if(field.equals("Signature"))
+                continue;
+            EditText element = new EditText(Context_);
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            element.setLayoutParams(p);
+            element.setText(field);
+            int id = (int) System.currentTimeMillis();
+            element.setId(id);
+            layout.addView(element);
+            fieldData.put(field, element);
+        }
+        return fieldData;
+    }
 }

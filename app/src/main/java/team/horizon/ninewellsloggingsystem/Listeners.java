@@ -1,20 +1,14 @@
 package team.horizon.ninewellsloggingsystem;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.itextpdf.text.DocumentException;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 class Listeners {
 
@@ -37,11 +31,11 @@ class Listeners {
         });
     }
 
-    public void MainActivitySubmitForm(Button btn, final BuildPdf pdf, final AccessFirebase Firebase ){
+    public void MainActivitySubmitForm(Button btn, final PDF pdf, final AccessFirebase Firebase, final HashMap<String, EditText> fieldsData){
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 try {
-                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/ExampleForm.pdf", "1","Jack","23/01/01","sdcard/Download/last_sig.bmp");
+                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/ExampleForm.pdf", fieldsData,"sdcard/Download/last_sig.bmp");
                     Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -56,7 +50,7 @@ class Listeners {
     public void MainActivityLaunchSignaturePad(Button btn, final UI UI_){
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                UI_.launchNewIntent(SignaturePad.class);
+                UI_.LaunchNewIntent(SignaturePad.class);
             }
         });
     }

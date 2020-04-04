@@ -37,16 +37,10 @@ public class MainActivity extends AppCompatActivity {
         Listeners MainActivityListeners = new Listeners();
 
         initialiseUI();
-        UI_.PopulateSpinner(FileInformation_.FileSearch("sdcard/Download/forms"), formSelectionSpinner, R.layout.support_simple_spinner_dropdown_item);
+        UI_.PopulateSpinner(FileInformation_.FileSearch("sdcard/Download/Forms"), formSelectionSpinner, R.layout.support_simple_spinner_dropdown_item);
 
-        HashMap<String, EditText> EditTextFieldsData = new HashMap<String, EditText>();
-        try {
-            EditTextFieldsData = UI_.GenerateEditText(Pdf.getFieldsInForm("sdcard/Download/forms/ExampleForm.pdf"), EditTextLayout);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MainActivityListeners.MainActivitySubmitForm(submitBtn, Pdf, Firebase, EditTextFieldsData);
+        MainActivityListeners.MainActivitySpinnerChange(formSelectionSpinner, UI_, Pdf, EditTextLayout);
+        MainActivityListeners.MainActivitySubmitForm(submitBtn, Pdf, Firebase, formSelectionSpinner.getSelectedItem().toString());
         MainActivityListeners.MainActivityLaunchSignaturePad(signBtn, UI_);
     }
 

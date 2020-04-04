@@ -1,8 +1,11 @@
 package team.horizon.ninewellsloggingsystem;
 
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.itextpdf.text.DocumentException;
 
@@ -12,6 +15,11 @@ import java.util.HashMap;
 
 class Listeners {
 
+    HashMap<String, EditText> EditTextFieldsData = new HashMap<String, EditText>();
+
+    public HashMap<String, EditText> getEditTextFieldsData() {
+        return EditTextFieldsData;
+    }
 
     public void SignaturePadClear(Button btn, final com.github.gcacace.signaturepad.views.SignaturePad signaturePad){
         btn.setOnClickListener(new View.OnClickListener() {
@@ -31,11 +39,11 @@ class Listeners {
         });
     }
 
-    public void MainActivitySubmitForm(Button btn, final PDF pdf, final AccessFirebase Firebase, final HashMap<String, EditText> fieldsData){
+    public void MainActivitySubmitForm(Button btn, final PDF pdf, final AccessFirebase Firebase, final String form){
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 try {
-                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/ExampleForm.pdf", fieldsData,"sdcard/Download/last_sig.bmp");
+                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/"+ form, EditTextFieldsData,"sdcard/Download/last_sig.bmp");
                     Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -52,6 +60,24 @@ class Listeners {
             public void onClick(View view) {
                 UI_.LaunchNewIntent(SignaturePad.class);
             }
+        });
+    }
+
+    public void MainActivitySpinnerChange(final Spinner spinner, final UI UI_, final PDF Pdf, final LinearLayout layout){
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                try {
+                    EditTextFieldsData = UI_.GenerateEditText(Pdf.getFieldsInForm("sdcard/Download/Forms/" + spinner.getSelectedItem().toString()), layout);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+
         });
     }
 }

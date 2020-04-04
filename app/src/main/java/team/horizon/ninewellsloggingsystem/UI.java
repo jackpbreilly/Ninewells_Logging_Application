@@ -36,7 +36,7 @@ class UI {
     }
 
 
-    // Look for doublers ()
+    // Look for doublers ()!-434)********
     public HashMap<String, EditText> GenerateEditText(Map<String, AcroFields.Item> data, LinearLayout layout){
         HashMap<String, EditText> fieldData = new HashMap<String, EditText>();
         for (String field:data.keySet()) {

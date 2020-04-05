@@ -39,12 +39,15 @@ class Listeners {
         });
     }
 
-    public void MainActivitySubmitForm(Button btn, final PDF pdf, final AccessFirebase Firebase, final String form){
+    public void MainActivitySubmitForm(Button btn, final PDF pdf, final AccessFirebase Firebase, final String form, final Validation valid){
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 try {
-                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/"+ form, EditTextFieldsData,"sdcard/Download/last_sig.bmp");
-                    Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase);
+                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/"+ form, EditTextFieldsData,"sdcard/Download/last_sig.bmp", valid);
+                    if(valid.CheckIfEditTextEmpty(fileToUploadToFirebase)){
+                    }else{
+                        Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {

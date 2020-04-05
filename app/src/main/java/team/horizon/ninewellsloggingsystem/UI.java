@@ -53,4 +53,8 @@ class UI {
         }
         return fieldData;
     }
+
+    public void SendToast(){
+
+    }
 }

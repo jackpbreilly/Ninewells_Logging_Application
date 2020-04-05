@@ -27,24 +27,30 @@ class PDF {
 
 
     // Clones PDF and returns new path and name
-    public String CreateNewPDF(String pathToFileToClone, HashMap<String, EditText> fieldsData, String pathToSignature) throws IOException, DocumentException {
+    public String CreateNewPDF(String pathToFileToClone, HashMap<String, EditText> fieldsData, String pathToSignature, Validation valid) throws IOException, DocumentException {
         PdfReader readerOriginalDoc = new PdfReader(pathToFileToClone);
         // Creates New PDF Named: [Current_MilliSec].pdf
         String documentNameAndPath = "/sdcard/Download/" +System.currentTimeMillis() + ".pdf";
         PdfStamper stamper = new PdfStamper(readerOriginalDoc,new FileOutputStream(documentNameAndPath));
-        AddInputToForm(stamper, fieldsData, pathToSignature);
 
-        stamper.close();
-
-        return documentNameAndPath;
+        if(AddInputToForm(stamper, fieldsData, pathToSignature, valid)){
+            stamper.close();
+            return documentNameAndPath;
+        } else{
+            stamper.close();
+            return "";
+        }
     }
 
-    public void AddInputToForm(PdfStamper PDF, HashMap<String, EditText> fieldsData, String pathToSignature) throws IOException, DocumentException {
+    public Boolean AddInputToForm(PdfStamper PDF, HashMap<String, EditText> fieldsData, String pathToSignature, Validation valid) throws IOException, DocumentException {
         AcroFields fields = PDF.getAcroFields();
 
         for(Map.Entry<String, EditText> field : fieldsData.entrySet()) {
             String key = field.getKey();
             EditText value = field.getValue();
+            if(valid.CheckIfEditTextIsDefault(String.valueOf(key), String.valueOf(value.getText()))){
+                return false;
+            }
             fields.setField(key, String.valueOf(value.getText()));
         }
 
@@ -55,6 +61,7 @@ class PDF {
         signature.setImage(Image.getInstance(pathToSignature));
         fields.replacePushbuttonField("Signature", signature.getField());
         PDF.close();
+        return true;
     }
 
     public Map<String, AcroFields.Item> getFieldsInForm(String PDFPath) throws IOException {

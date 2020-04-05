@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
     Spinner formSelectionSpinner;
     LinearLayout EditTextLayout;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +33,13 @@ public class MainActivity extends AppCompatActivity {
         AccessFirebase Firebase = new AccessFirebase(this);
         PDF Pdf = new PDF();
         Listeners MainActivityListeners = new Listeners();
+        Validation Validation_ = new Validation();
 
         initialiseUI();
         UI_.PopulateSpinner(FileInformation_.FileSearch("sdcard/Download/Forms"), formSelectionSpinner, R.layout.support_simple_spinner_dropdown_item);
 
         MainActivityListeners.MainActivitySpinnerChange(formSelectionSpinner, UI_, Pdf, EditTextLayout);
-        MainActivityListeners.MainActivitySubmitForm(submitBtn, Pdf, Firebase, formSelectionSpinner.getSelectedItem().toString());
+        MainActivityListeners.MainActivitySubmitForm(submitBtn, Pdf, Firebase, formSelectionSpinner.getSelectedItem().toString(), Validation_);
         MainActivityListeners.MainActivityLaunchSignaturePad(signBtn, UI_);
     }
 

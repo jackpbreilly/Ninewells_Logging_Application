@@ -29,12 +29,12 @@ public class SignaturePad extends AppCompatActivity {
         setContentView(R.layout.signature_pad_activity);
 
         FileManager FileManager_ = new FileManager(this);
-
+        UI UI_ = new UI(this, this);
         initialiseUI();
 
         Listeners SignaturePadListeners = new Listeners();
         SignaturePadListeners.SignaturePadClear(clearBtn, signaturePad);
-        SignaturePadListeners.SignaturePadSave(saveBtn, signaturePad, FileManager_);
+        SignaturePadListeners.SignaturePadSave(saveBtn, signaturePad, FileManager_, UI_);
     }
 
 

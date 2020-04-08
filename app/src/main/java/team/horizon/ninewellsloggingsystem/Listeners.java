@@ -9,9 +9,12 @@ import android.widget.Spinner;
 
 import com.itextpdf.text.DocumentException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.itextpdf.text.pdf.PdfVisibilityExpression.OR;
 
 class Listeners {
 
@@ -30,11 +33,12 @@ class Listeners {
         });
     }
 
-    public void SignaturePadSave(Button btn, final com.github.gcacace.signaturepad.views.SignaturePad signaturePad, final FileManager saveSignature){
+    public void SignaturePadSave(Button btn, final com.github.gcacace.signaturepad.views.SignaturePad signaturePad, final FileManager saveSignature, final UI UI_){
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveSignature.SaveSignature(signaturePad);
+                UI_.LaunchNewIntent(MainActivity.class);
             }
         });
     }
@@ -44,7 +48,7 @@ class Listeners {
             public void onClick(View view) {
                 try {
                     String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/"+ form, EditTextFieldsData,"sdcard/Download/last_sig.bmp", valid);
-                    if(valid.CheckIfEditTextEmpty(fileToUploadToFirebase)){
+                    if(valid.CheckIfEditTextEmpty(fileToUploadToFirebase) || valid.CheckIfFileExists(new File("sdcard/Download/last_sig.bmp")) ){
                     }else{
                         Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase);
                     }

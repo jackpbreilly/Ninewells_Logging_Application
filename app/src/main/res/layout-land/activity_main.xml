@@ -7,6 +7,20 @@
     android:background="#00A9CE"
     tools:context="team.horizon.ninewellsloggingsystem.MainActivity">
 
+    <com.github.gcacace.signaturepad.views.SignaturePad
+        android:id="@+id/signature_pad"
+        android:layout_width="279dp"
+        android:layout_height="144dp"
+        android:layout_marginBottom="64dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.903"
+        app:penColor="@android:color/black" />
+
     <Spinner
         android:id="@+id/form"
         android:layout_width="381dp"
@@ -17,6 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.06" />
+
     <Button
         android:id="@+id/clear"
         android:layout_width="178dp"
@@ -32,20 +47,6 @@
         app:layout_constraintVertical_bias="0.776" />
 
     <Button
-        android:id="@+id/sign"
-        android:layout_width="178dp"
-        android:layout_height="58dp"
-        android:background="#003087"
-        android:text="Sign"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.62"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.949" />
-
-    <Button
         android:id="@+id/submit"
         android:layout_width="156dp"
         android:layout_height="55dp"
@@ -55,21 +56,22 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.291"
+        app:layout_constraintHorizontal_bias="0.554"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.949" />
+        app:layout_constraintVertical_bias="0.944" />
 
     <LinearLayout
         android:id="@+id/EditTextLayout"
-        android:layout_width="720dp"
-        android:layout_height="688dp"
+        android:layout_width="990dp"
+        android:layout_height="339dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.675"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.547" />
+        app:layout_constraintVertical_bias="0.388" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -94,10 +96,10 @@
         android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.184"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.175" />
+        app:layout_constraintVertical_bias="0.11" />
 
     <TextView
         android:id="@+id/textView2"
@@ -114,5 +116,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.058" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="176dp"
+        android:layout_height="63dp"
+        android:fontFamily="@font/istok_web_bold"
+        android:shadowColor="#005EB8"
+        android:text="Signature"
+        android:textColor="#003087"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.274"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.781" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.itextpdf.text.DocumentException;
 
 import java.io.File;
@@ -33,25 +34,14 @@ class Listeners {
         });
     }
 
-    public void SignaturePadSave(Button btn, final com.github.gcacace.signaturepad.views.SignaturePad signaturePad, final FileManager saveSignature, final UI UI_){
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveSignature.SaveSignature(signaturePad);
-                UI_.LaunchNewIntent(MainActivity.class);
-            }
-        });
-    }
 
-    public void MainActivitySubmitForm(Button btn, final PDF pdf, final AccessFirebase Firebase, final String form, final Validation valid){
+    public void MainActivitySubmitForm(Button btn, final PDF pdf, final AccessFirebase Firebase, final Spinner spinner, final com.github.gcacace.signaturepad.views.SignaturePad signaturePad, final FileManager saveSignature, final UI UI_){
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 try {
-                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/"+ form, EditTextFieldsData,"sdcard/Download/last_sig.bmp", valid);
-                    if(valid.CheckIfEditTextEmpty(fileToUploadToFirebase) || valid.CheckIfFileExists(new File("sdcard/Download/last_sig.bmp")) ){
-                    }else{
+                    saveSignature.SaveSignature(signaturePad);
+                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/"+ spinner.getSelectedItem().toString(), EditTextFieldsData,"sdcard/Download/last_sig.bmp");
                         Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase);
-                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {
@@ -62,19 +52,13 @@ class Listeners {
 
         });
     }
-    public void MainActivityLaunchSignaturePad(Button btn, final UI UI_){
-        btn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                UI_.LaunchNewIntent(SignaturePad.class);
-            }
-        });
-    }
 
     public void MainActivitySpinnerChange(final Spinner spinner, final UI UI_, final PDF Pdf, final LinearLayout layout){
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 try {
+                    layout.removeAllViews();
                     EditTextFieldsData = UI_.GenerateEditText(Pdf.getFieldsInForm("sdcard/Download/Forms/" + spinner.getSelectedItem().toString()), layout);
                 } catch (IOException e) {
                     e.printStackTrace();

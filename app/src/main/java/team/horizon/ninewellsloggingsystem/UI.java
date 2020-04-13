@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.itextpdf.text.pdf.AcroFields;
 
@@ -30,13 +31,12 @@ class UI {
         arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinnerEl.setAdapter(arrayAdapter);
     }
+
     public void LaunchNewIntent(Class class_){
         Intent intent = new Intent(Context_, class_);
         Context_.startActivity(intent);
     }
 
-
-    // Look for doublers ()!-434)********
     public HashMap<String, EditText> GenerateEditText(Map<String, AcroFields.Item> data, LinearLayout layout){
         HashMap<String, EditText> fieldData = new HashMap<String, EditText>();
         for (String field:data.keySet()) {
@@ -54,7 +54,8 @@ class UI {
         return fieldData;
     }
 
-    public void SendToast(){
-
+    public void SendToast(String text){
+        Toast.makeText(Activity_, text,
+                Toast.LENGTH_LONG).show();
     }
 }

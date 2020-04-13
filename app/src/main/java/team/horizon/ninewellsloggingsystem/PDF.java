@@ -3,6 +3,7 @@ package team.horizon.ninewellsloggingsystem;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
 
@@ -30,21 +31,22 @@ class PDF {
     public String CreateNewPDF(String pathToFileToClone, HashMap<String, EditText> fieldsData, String pathToSignature) throws IOException, DocumentException {
         PdfReader readerOriginalDoc = new PdfReader(pathToFileToClone);
         // Creates New PDF Named: [Current_MilliSec].pdf
-        String documentNameAndPath = "/sdcard/Download/" +System.currentTimeMillis() + ".pdf";
+        String documentNameAndPath = Environment.getExternalStorageDirectory().getPath() +"/Download/" +System.currentTimeMillis() + ".pdf";
         PdfStamper stamper = new PdfStamper(readerOriginalDoc,new FileOutputStream(documentNameAndPath));
 
-        AddInputToForm(stamper, fieldsData, pathToSignature);
+        if(AddInputToForm(stamper, fieldsData, pathToSignature)){
             stamper.close();
-            return documentNameAndPath;
+            return documentNameAndPath;}else{stamper.close(); return "";}
     }
 
-    public void AddInputToForm(PdfStamper PDF, HashMap<String, EditText> fieldsData, String pathToSignature) throws IOException, DocumentException {
+    public boolean AddInputToForm(PdfStamper PDF, HashMap<String, EditText> fieldsData, String pathToSignature) throws IOException, DocumentException {
         AcroFields fields = PDF.getAcroFields();
 
         for(Map.Entry<String, EditText> field : fieldsData.entrySet()) {
             String key = field.getKey();
-            EditText value = field.getValue();
-            fields.setField(key, String.valueOf(value.getText()));
+            String value = String.valueOf(field.getValue().getText());
+            if(key.equals(value) || value == "" ){ return false;}else{
+            fields.setField(key, String.valueOf(value));}
         }
 
         // Adding signature to form
@@ -54,6 +56,7 @@ class PDF {
         signature.setImage(Image.getInstance(pathToSignature));
         fields.replacePushbuttonField("Signature", signature.getField());
         PDF.close();
+        return true;
     }
 
     public Map<String, AcroFields.Item> getFieldsInForm(String PDFPath) throws IOException {

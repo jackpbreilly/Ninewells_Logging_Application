@@ -27,27 +27,22 @@ class AccessFirebase {
     }
 
 
-    public void UploadFileToFirebaseStorage(String pathOfFileToUpload){
+    public void UploadFileToFirebaseStorage(String pathOfFileToUpload, final UI toast){
 
         Uri file = Uri.fromFile(new File(pathOfFileToUpload));
-        Log.d("file", file.getPath());
-
-
         StorageReference reference = this.storageRef.child(String.valueOf(System.currentTimeMillis())+".pdf");
-
         UploadTask uploadTask = reference.putFile(file);
 
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(Activity_, "Unsuccessful: " + exception,
-                        Toast.LENGTH_LONG).show();
+                toast.SendToast("Unsuccessfully uploaded PDF to Server: " + exception);
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(Activity_, "Successfully Uploaded",
-                        Toast.LENGTH_LONG).show();
+                toast.SendToast("Successfully uploaded PDF to Server");
+
             }
         });
     }

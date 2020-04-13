@@ -1,5 +1,6 @@
 package team.horizon.ninewellsloggingsystem;
 
+import android.os.Environment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -39,9 +40,14 @@ class Listeners {
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 try {
-                    saveSignature.SaveSignature(signaturePad);
-                    String fileToUploadToFirebase = pdf.CreateNewPDF("sdcard/Download/forms/"+ spinner.getSelectedItem().toString(), EditTextFieldsData,"sdcard/Download/last_sig.bmp");
-                        Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase);
+                    saveSignature.SaveSignature(signaturePad, UI_);
+                    String fileToUploadToFirebase = pdf.CreateNewPDF(Environment.getExternalStorageDirectory().getPath() +"/Download/Forms/"+ spinner.getSelectedItem().toString(), EditTextFieldsData,Environment.getExternalStorageDirectory().getPath() + "/Download/last_sig.bmp");
+                    if (fileToUploadToFirebase != ""){
+                        Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase,UI_);
+                    }
+                    else{
+                        UI_.SendToast("Error with Inputted Data");
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {

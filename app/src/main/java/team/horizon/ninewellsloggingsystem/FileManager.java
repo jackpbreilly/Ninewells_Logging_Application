@@ -41,56 +41,59 @@ class FileManager {
         return fileData;
     }
 
-    public void SaveSignature(final com.github.gcacace.signaturepad.views.SignaturePad signaturePad){
+    public void SaveSignature(final com.github.gcacace.signaturepad.views.SignaturePad signaturePad, UI toast){
         Bitmap signature_bitmap = signaturePad.getSignatureBitmap();
-        File output_path = new File("/sdcard/Download", "last_sig.bmp");
-
+        File output_path = new File(Environment.getExternalStorageDirectory().getPath() +"/Download", "last_sig.bmp");
         try (FileOutputStream out = new FileOutputStream(output_path)) { //this is essentially "with" from Python
             signature_bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             Context_.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"
                     + getExternalStorageDirectory())));
-            Toast.makeText(Context_, "Saved signature to SD", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(Context_, "Error occurred", Toast.LENGTH_SHORT).show();
+toast.SendToast("Error Saving Signature: " + e);
         }
     }
-    public void moveAssetToStorageDir(String path){
+    public void moveAssetToStorageDir(String path, UI toast) {
 
-        File file = new File("sdcard/Download/Forms");
-        if(!file.exists() && !file.isDirectory()){
+        File file = new File(Environment.getExternalStorageDirectory().getPath() +"/Download/Forms");
+        if (!file.exists() && !file.isDirectory()) {
             file.mkdir();
 
-        String rootPath = file.getPath() + "/";
-        try{
-            String [] paths = Context_.getAssets().list(path);
-            for(int i=0; i<paths.length; i++){
-                if(paths[i].indexOf(".")==-1){
-                    File dir = new File(rootPath + paths[i]);
-                    dir.mkdir();
-                    moveAssetToStorageDir(paths[i]);
-                }else {
-                    File dest = null;
-                    InputStream in = null;
-                    if(path.length() == 0) {
-                        dest = new File(rootPath + paths[i]);
-                        in = Context_.getAssets().open(paths[i]);
-                    }else{
-                        dest = new File(rootPath + "/" + paths[i]);
-                        in = Context_.getAssets().open(path + "/" + paths[i]);
+            String rootPath = file.getPath() + "/";
+            try {
+                String[] paths = Context_.getAssets().list(path);
+                for (int i = 0; i < paths.length; i++) {
+                    if (paths[i].indexOf(".") == -1) {
+                        File dir = new File(rootPath + paths[i]);
+                        dir.mkdir();
+                        moveAssetToStorageDir(paths[i], toast);
+                    } else {
+                        File dest = null;
+                        InputStream in = null;
+                        if (path.length() == 0) {
+                            dest = new File(rootPath + paths[i]);
+                            in = Context_.getAssets().open(paths[i]);
+                        } else {
+                            dest = new File(rootPath + "/" + paths[i]);
+                            in = Context_.getAssets().open(path + "/" + paths[i]);
+                        }
+                        dest.createNewFile();
+                        FileOutputStream out = new FileOutputStream(dest);
+                        byte[] buff = new byte[in.available()];
+                        in.read(buff);
+                        out.write(buff);
+                        out.close();
+                        in.close();
                     }
-                    dest.createNewFile();
-                    FileOutputStream out = new FileOutputStream(dest);
-                    byte [] buff = new byte[in.available()];
-                    in.read(buff);
-                    out.write(buff);
-                    out.close();
-                    in.close();
+
+
+                    toast.SendToast("Successfully Imported Forms");
                 }
+            } catch (Exception exp) {
+                toast.SendToast("Unsuccessfully Imported Forms: " + exp
+                );
+
             }
-        }catch (Exception exp){
-            exp.printStackTrace();
         }
-    }
     }
 }

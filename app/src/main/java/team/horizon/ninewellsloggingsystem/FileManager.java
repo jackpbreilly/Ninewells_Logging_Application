@@ -6,13 +6,19 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.system.Os;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+
+import static android.os.Environment.getExternalStorageDirectory;
 
 class FileManager {
 
@@ -42,12 +48,49 @@ class FileManager {
         try (FileOutputStream out = new FileOutputStream(output_path)) { //this is essentially "with" from Python
             signature_bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             Context_.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"
-                    + Environment.getExternalStorageDirectory())));
+                    + getExternalStorageDirectory())));
             Toast.makeText(Context_, "Saved signature to SD", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(Context_, "Error occurred", Toast.LENGTH_SHORT).show();
         }
     }
+    public void moveAssetToStorageDir(String path){
 
+        File file = new File("sdcard/Download/Forms");
+        if(!file.exists() && !file.isDirectory()){
+            file.mkdir();
+
+        String rootPath = file.getPath() + "/";
+        try{
+            String [] paths = Context_.getAssets().list(path);
+            for(int i=0; i<paths.length; i++){
+                if(paths[i].indexOf(".")==-1){
+                    File dir = new File(rootPath + paths[i]);
+                    dir.mkdir();
+                    moveAssetToStorageDir(paths[i]);
+                }else {
+                    File dest = null;
+                    InputStream in = null;
+                    if(path.length() == 0) {
+                        dest = new File(rootPath + paths[i]);
+                        in = Context_.getAssets().open(paths[i]);
+                    }else{
+                        dest = new File(rootPath + "/" + paths[i]);
+                        in = Context_.getAssets().open(path + "/" + paths[i]);
+                    }
+                    dest.createNewFile();
+                    FileOutputStream out = new FileOutputStream(dest);
+                    byte [] buff = new byte[in.available()];
+                    in.read(buff);
+                    out.write(buff);
+                    out.close();
+                    in.close();
+                }
+            }
+        }catch (Exception exp){
+            exp.printStackTrace();
+        }
+    }
+    }
 }

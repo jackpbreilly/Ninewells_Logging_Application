@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
         PDF Pdf = new PDF();
         Listeners MainActivityListeners = new Listeners();
         initialiseUI();
+
+            FileInformation_.moveAssetToStorageDir("forms");
+
+
         UI_.PopulateSpinner(FileInformation_.FileSearch("sdcard/Download/Forms"), formSelectionSpinner, R.layout.support_simple_spinner_dropdown_item);
 
         MainActivityListeners.SignaturePadClear(clearBtn, signaturePad);

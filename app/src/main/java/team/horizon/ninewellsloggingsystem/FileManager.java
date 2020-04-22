@@ -96,4 +96,16 @@ toast.SendToast("Error Saving Signature: " + e);
             }
         }
     }
+
+    public void deleteFile(String filename) throws IOException {
+        File file = new File(filename);
+        file.delete();
+
+        if(file.exists()){
+            file.getCanonicalFile().delete();
+            if(file.exists()){
+                Context_.getApplicationContext().deleteFile(file.getName());
+            }
+    }
+}
 }

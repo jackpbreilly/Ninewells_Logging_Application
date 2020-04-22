@@ -45,7 +45,7 @@ class PDF {
         for(Map.Entry<String, EditText> field : fieldsData.entrySet()) {
             String key = field.getKey();
             String value = String.valueOf(field.getValue().getText());
-            if(key.equals(value) || value == "" ){ return false;}else{
+            if(key.equals(value) || value.equals("")){ return false;}else{
             fields.setField(key, String.valueOf(value));}
         }
 

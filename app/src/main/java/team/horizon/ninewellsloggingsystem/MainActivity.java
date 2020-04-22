@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button submitBtn, clearBtn;
+    Button submitBtn, clearBtn, viewFormBtn;
     Spinner formSelectionSpinner;
     LinearLayout EditTextLayout;
     private com.github.gcacace.signaturepad.views.SignaturePad signaturePad;
@@ -35,12 +35,14 @@ public class MainActivity extends AppCompatActivity {
         UI_.PopulateSpinner(FileInformation_.FileSearch(Environment.getExternalStorageDirectory().getPath() +"/Download/Forms"), formSelectionSpinner, R.layout.support_simple_spinner_dropdown_item);
 
         MainActivityListeners.SignaturePadClear(clearBtn, signaturePad);
+        MainActivityListeners.MainActivityViewForm(viewFormBtn, formSelectionSpinner, this);
         MainActivityListeners.MainActivitySpinnerChange(formSelectionSpinner, UI_, Pdf, EditTextLayout);
         MainActivityListeners.MainActivitySubmitForm(submitBtn, Pdf, Firebase, formSelectionSpinner, signaturePad, FileInformation_, UI_);
     }
 
     private void initialiseUI() {
         submitBtn = findViewById(R.id.submit);
+        viewFormBtn = findViewById(R.id.viewForm);
         clearBtn = findViewById(R.id.clear);
         formSelectionSpinner = findViewById(R.id.form);
         signaturePad = findViewById(R.id.signature_pad);

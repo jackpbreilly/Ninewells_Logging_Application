@@ -1,5 +1,10 @@
 package team.horizon.ninewellsloggingsystem;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.view.View;
 import android.widget.AdapterView;
@@ -7,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+
+import androidx.core.content.FileProvider;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.itextpdf.text.DocumentException;
@@ -16,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.os.Environment.getExternalStorageDirectory;
 import static com.itextpdf.text.pdf.PdfVisibilityExpression.OR;
 
 class Listeners {
@@ -44,6 +52,9 @@ class Listeners {
                     String fileToUploadToFirebase = pdf.CreateNewPDF(Environment.getExternalStorageDirectory().getPath() +"/Download/Forms/"+ spinner.getSelectedItem().toString(), EditTextFieldsData,Environment.getExternalStorageDirectory().getPath() + "/Download/last_sig.bmp");
                     if (fileToUploadToFirebase != ""){
                         Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase,UI_);
+                        saveSignature.deleteFile(fileToUploadToFirebase);
+                        saveSignature.deleteFile(Environment.getExternalStorageDirectory().getPath() +"/Download/last_sig.bmp");
+
                     }
                     else{
                         UI_.SendToast("Error with Inputted Data");
@@ -65,7 +76,7 @@ class Listeners {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 try {
                     layout.removeAllViews();
-                    EditTextFieldsData = UI_.GenerateEditText(Pdf.getFieldsInForm("sdcard/Download/Forms/" + spinner.getSelectedItem().toString()), layout);
+                    EditTextFieldsData = UI_.GenerateEditText(Pdf.getFieldsInForm(Environment.getExternalStorageDirectory().getPath() + "/Download/Forms/" + spinner.getSelectedItem().toString()), layout);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -77,4 +88,26 @@ class Listeners {
 
         });
     }
+
+    public void MainActivityViewForm(Button btn, final Spinner pdfname, final Context context) {
+
+    btn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            File path = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/Forms/");
+            File file = new File(path, pdfname.getSelectedItem().toString());
+
+            // Get URI and MIME type of file
+            Uri uri = FileProvider.getUriForFile(context, "team.horizon.ninewellsloggingsystem" + ".fileprovider", file);
+            String mime = context.getContentResolver().getType(uri);
+
+            // Open file with user selected app
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, mime);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            context.startActivity(intent);
+        }
+    });
+}
 }

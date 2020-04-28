@@ -27,6 +27,7 @@ class FileManager {
     public FileManager(Context context_) {
         Context_ = context_;
     }
+
     // Returns ArrayList of Files in Directory
     public ArrayList<String> FileSearch(String pathToSearch) {
         ArrayList<String> fileData = new ArrayList<>();
@@ -41,6 +42,7 @@ class FileManager {
         return fileData;
     }
 
+    // Saves signature to SD card
     public void SaveSignature(final com.github.gcacace.signaturepad.views.SignaturePad signaturePad, UI toast){
         Bitmap signature_bitmap = signaturePad.getSignatureBitmap();
         File output_path = new File(Environment.getExternalStorageDirectory().getPath() +"/Download", "last_sig.bmp");
@@ -53,6 +55,8 @@ class FileManager {
 toast.SendToast("Error Saving Signature: " + e);
         }
     }
+
+    // Looks in res/assets for forms to move to sd and then moves them
     public void moveAssetToStorageDir(String path, UI toast) {
 
         File file = new File(Environment.getExternalStorageDirectory().getPath() +"/Download/Forms");
@@ -97,6 +101,7 @@ toast.SendToast("Error Saving Signature: " + e);
         }
     }
 
+    // removed file from sd
     public void deleteFile(String filename) throws IOException {
         File file = new File(filename);
         file.delete();

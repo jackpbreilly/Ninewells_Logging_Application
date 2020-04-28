@@ -37,6 +37,7 @@ class UI {
         Context_.startActivity(intent);
     }
 
+    // creates all input boxes for display
     public HashMap<String, EditText> GenerateEditText(Map<String, AcroFields.Item> data, LinearLayout layout){
         HashMap<String, EditText> fieldData = new HashMap<String, EditText>();
         for (String field:data.keySet()) {

@@ -39,6 +39,7 @@ class PDF {
             return documentNameAndPath;}else{stamper.close(); return "";}
     }
 
+    // iterates through map to add input to form
     public boolean AddInputToForm(PdfStamper PDF, HashMap<String, EditText> fieldsData, String pathToSignature) throws IOException, DocumentException {
         AcroFields fields = PDF.getAcroFields();
 
@@ -59,6 +60,7 @@ class PDF {
         return true;
     }
 
+    // creates map of all fields on selected spinner form
     public Map<String, AcroFields.Item> getFieldsInForm(String PDFPath) throws IOException {
         PdfReader PDF = new PdfReader(PDFPath);
         AcroFields fields = PDF.getAcroFields();

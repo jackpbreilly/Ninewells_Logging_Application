@@ -17,6 +17,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 
 class AccessFirebase {
+// This will likely be deleted from the project !*
     private Activity Activity_;
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();

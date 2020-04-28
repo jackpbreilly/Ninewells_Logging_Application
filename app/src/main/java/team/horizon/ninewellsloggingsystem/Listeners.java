@@ -49,12 +49,14 @@ class Listeners {
             public void onClick(View view) {
                 try {
                     saveSignature.SaveSignature(signaturePad, UI_);
+                    // creates pdf on device
                     String fileToUploadToFirebase = pdf.CreateNewPDF(Environment.getExternalStorageDirectory().getPath() +"/Download/Forms/"+ spinner.getSelectedItem().toString(), EditTextFieldsData,Environment.getExternalStorageDirectory().getPath() + "/Download/last_sig.bmp");
+                   // uploads local pdf to firebase
                     if (fileToUploadToFirebase != ""){
                         Firebase.UploadFileToFirebaseStorage(fileToUploadToFirebase,UI_);
+                       // deletes file after uploaded to firebase
                         saveSignature.deleteFile(fileToUploadToFirebase);
                         saveSignature.deleteFile(Environment.getExternalStorageDirectory().getPath() +"/Download/last_sig.bmp");
-
                     }
                     else{
                         UI_.SendToast("Error with Inputted Data");
@@ -70,6 +72,8 @@ class Listeners {
         });
     }
 
+
+    // shows input boxes to display on change of spinner
     public void MainActivitySpinnerChange(final Spinner spinner, final UI UI_, final PDF Pdf, final LinearLayout layout){
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -89,6 +93,7 @@ class Listeners {
         });
     }
 
+    // opens select form in local pdf reader
     public void MainActivityViewForm(Button btn, final Spinner pdfname, final Context context) {
 
     btn.setOnClickListener(new View.OnClickListener() {
